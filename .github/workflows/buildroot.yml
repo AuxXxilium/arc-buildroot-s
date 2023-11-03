@@ -67,6 +67,8 @@ jobs:
           
           BUILDROOT_VERSION="$(grep ' BR2_VERSION :=' Makefile | cut -d '=' -f2 | tr -d ' ')"
           KERNEL_VERSION="$(grep BR2_LINUX_KERNEL_VERSION .config | cut -d'=' -f2 | tr -d '"')"
+          echo "BUILDROOT_VERSION=${BUILDROOT_VERSION}" >> $GITHUB_ENV
+          echo "KERNEL_VERSION=${KERNEL_VERSION}" >> $GITHUB_ENV
 
       - name: Upload Artifact
         if: success()
@@ -86,5 +88,5 @@ jobs:
             .buildroot/output/images/bzImage
             .buildroot/output/images/rootfs.cpio.xz
           body: |
-            Buildroot version: ${{ env.BUILDROOT_VERSION }}
-            Kernel version: ${{ env.KERNEL_VERSION }}
+            Buildroot Version: ${{ env.BUILDROOT_VERSION }}
+            Kernel Version: ${{ env.KERNEL_VERSION }}
