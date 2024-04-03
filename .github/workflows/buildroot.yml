@@ -71,7 +71,7 @@ jobs:
 
       - name: Upload Artifact
         if: success()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: grub
           path: |
@@ -80,10 +80,12 @@ jobs:
 
       # Publish a release if is a tag
       - name: Release
-        uses: softprops/action-gh-release@v1
+        if: success() && env.VERSION != ''
+        uses: ncipollo/release-action@v1
         with:
-          tag_name: ${{ inputs.version }}
-          files: |
+          tag: ${{ inputs.version }}
+          allowUpdates: true
+          artifacts: |
             .buildroot/output/images/bzImage
             .buildroot/output/images/rootfs.cpio.xz
           body: |
