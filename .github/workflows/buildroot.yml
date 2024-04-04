@@ -80,7 +80,7 @@ jobs:
 
       # Publish a release if is a tag
       - name: Release
-        if: success() && env.VERSION != ''
+        if: success() && ${{ inputs.version }} != ''
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ inputs.version }}
