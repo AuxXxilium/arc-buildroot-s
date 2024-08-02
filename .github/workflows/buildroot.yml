@@ -39,7 +39,23 @@ jobs:
           sudo snap install yq
           
           df -h
-          
+
+      - name: Calculate version
+        run: |
+          # Calculate Version
+          VERSION=""
+          if [ -n "${{ inputs.version }}" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="`date +'%y.%m.%d'-s`"
+          fi
+
+          if [ -n "${VERSION}" ]; then
+            # Modify Source File
+            echo "Version: ${VERSION}"
+            echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          fi
+
       - name: Build Buildroot
         run: |
           git clone https://oauth2:${{ secrets.ACTION }}@github.com/AuxXxilium/arc-build.git
@@ -80,10 +96,10 @@ jobs:
 
       # Publish a release if is a tag
       - name: Release
-        if: success() && ${{ inputs.version }} != ''
+        if: success() && ${{ env.VERSION }} != ''
         uses: ncipollo/release-action@v1
         with:
-          tag: ${{ inputs.version }}
+          tag: ${{ env.VERSION }}
           allowUpdates: true
           artifacts: |
             .buildroot/output/images/bzImage
